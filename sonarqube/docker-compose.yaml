@@ -1,0 +1,38 @@
+version: '3'
+services:
+  Jenkinsserver:
+    user: root 
+    image: jenkins-docker
+    ports: 
+     - "8080:8080"
+     - "50000:50000"
+    volumes:
+     - //c/var/jenkins_home:/var/jenkins_home
+     - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins
+    
+    
+  DB:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonarpassword
+    networks:
+      - jenkins
+  sonarqube:
+     image: sonarqube:lts
+     ports:
+      - "9000:9000"
+      - "9092:9092"
+     networks:
+      - jenkins
+     environment:
+       SONARQUBE_JDBC_USERNAME: sonar
+       SONARQUBE_JDBC_PASSWORD: sonarpassword
+       SONARQUBE_JDBC_URL : "jdbc:postgresql://DB:5432/sonar"
+     depends_on:
+      - DB
+
+networks:
+ jenkins:
