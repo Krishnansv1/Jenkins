@@ -17,7 +17,7 @@ add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
-# update repository    
+# update repository       
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io
 systemctl enable docker
